@@ -1,4 +1,4 @@
-name: Tree det pre-commit and post-push
+name: Search AVL tree pre-commit and post-push
 on:
   push:
     branches:
