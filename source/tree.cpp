@@ -19,7 +19,9 @@ void AVLTree::balance(std::unique_ptr<Node>& node) {
             (tmp->getRightChild() != nullptr &&
              tmp->getLeftChild()->height_ <= tmp->getRightChild()->height_)) {
             node->getRightChild() = std::move(tmp->getLeftChild());
+            node->updateParameters();
             tmp->getLeftChild() = std::move(node);
+            tmp->updateParameters();
             std::swap(tmp, node);
         } else if (tmp->getRightChild().get() == nullptr ||
                    (tmp->getLeftChild() != nullptr &&
@@ -27,9 +29,12 @@ void AVLTree::balance(std::unique_ptr<Node>& node) {
                         tmp->getRightChild()->height_)) {
             auto tmp1 = std::move(tmp->getLeftChild());
             node->getRightChild() = std::move(tmp1->getLeftChild());
+            node->updateParameters();
             tmp->getLeftChild() = std::move(tmp1->getRightChild());
+            tmp->updateParameters();
             tmp1->getLeftChild() = std::move(node);
             tmp1->getRightChild() = std::move(tmp);
+            tmp1->updateParameters();
             std::swap(tmp1, node);
         }
     } else if (node->getLeftChild().get() != nullptr &&
@@ -39,7 +44,9 @@ void AVLTree::balance(std::unique_ptr<Node>& node) {
             (tmp->getLeftChild() != nullptr &&
              tmp->getRightChild()->height_ <= tmp->getLeftChild()->height_)) {
             node->getLeftChild() = std::move(tmp->getRightChild());
+            node->updateParameters();
             tmp->getRightChild() = std::move(node);
+            tmp->updateParameters();
             std::swap(tmp, node);
         } else if (tmp->getLeftChild().get() == nullptr ||
                    (tmp->getRightChild() != nullptr &&
@@ -47,9 +54,12 @@ void AVLTree::balance(std::unique_ptr<Node>& node) {
                         tmp->getLeftChild()->height_)) {
             auto tmp1 = std::move(tmp->getRightChild());
             node->getLeftChild() = std::move(tmp1->getRightChild());
+            node->updateParameters();
             tmp->getRightChild() = std::move(tmp1->getLeftChild());
+            tmp->updateParameters();
             tmp1->getRightChild() = std::move(node);
             tmp1->getLeftChild() = std::move(tmp);
+            tmp1->updateParameters();
             std::swap(tmp1, node);
         }
     }
