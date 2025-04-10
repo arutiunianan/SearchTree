@@ -25,10 +25,11 @@ class AVLTree {
     void dump_gv() const;
 
    private:
-    size_t addNode(int value, std::unique_ptr<Node>& node);
+    void addNode(int value, std::unique_ptr<Node>& node);
 
     void balance(std::unique_ptr<Node>& node);
-    void rotate(std::unique_ptr<Node>& node1, std::unique_ptr<Node>& node2);
+    void balanceLeft(std::unique_ptr<Node>& node);
+    void balanceRight(std::unique_ptr<Node>& node);
 };
 
 }  // namespace SearchTree

@@ -28,6 +28,9 @@ class Node {
 
     std::unique_ptr<Node>& getLeftChild() { return left_; }
     std::unique_ptr<Node>& getRightChild() { return right_; }
+    static size_t computeChildHeight(const std::unique_ptr<Node>& child) {
+        return child ? child->height_ + 1 : 0;
+    }
 
     static void swap(Node& a, Node& b) noexcept {
         std::swap(a.left_, b.left_);
@@ -43,17 +46,9 @@ class Node {
             return height_;
         }
 
-        size_t left_height = 0;
-        size_t right_height = 0;
-
-        if (left_.get() != nullptr) {
-            left_height = left_->height_;
-        }
-        if (right_.get() != nullptr) {
-            right_height = right_->height_;
-        }
-
-        height_ = std::max(left_height, right_height) + 1;
+        size_t left_height = computeChildHeight(left_);
+        size_t right_height = computeChildHeight(right_);
+        height_ = std::max(left_height, right_height);
         return height_;
     }
 
