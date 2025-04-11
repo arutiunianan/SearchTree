@@ -2,6 +2,59 @@
 
 namespace SearchTree {
 
+size_t AVLTree::findDistance(int lower_key, int upper_key) const {
+    if (root.get() == nullptr) {
+        return 0;
+    }
+
+    size_t num_of_nodes = root->desc_num_ + 1;
+    size_t num_of_large = findNumOfLarge(lower_key);
+    size_t num_of_smaller = findNumOfSmaller(upper_key);
+    return num_of_large + num_of_smaller - num_of_nodes;
+}
+
+size_t AVLTree::findNumOfLarge(int value,
+                               const std::unique_ptr<Node>& node) const {
+    size_t num_of_large = 0;
+
+    if (node->value_ >= value) {
+        if (node->getRightChild().get() != nullptr) {
+            num_of_large += node->getRightChild()->desc_num_ + 1;
+        }
+        if (node->getLeftChild().get() != nullptr) {
+            num_of_large += findNumOfLarge(value, node->getLeftChild());
+        }
+        ++num_of_large;
+    } else {
+        if (node->getRightChild().get() != nullptr) {
+            num_of_large += findNumOfLarge(value, node->getRightChild());
+        }
+    }
+
+    return num_of_large;
+}
+
+size_t AVLTree::findNumOfSmaller(int value,
+                                 const std::unique_ptr<Node>& node) const {
+    size_t num_of_smaller = 0;
+
+    if (node->value_ <= value) {
+        if (node->getLeftChild().get() != nullptr) {
+            num_of_smaller += node->getLeftChild()->desc_num_ + 1;
+        }
+        if (node->getRightChild().get() != nullptr) {
+            num_of_smaller += findNumOfSmaller(value, node->getRightChild());
+        }
+        ++num_of_smaller;
+    } else {
+        if (node->getLeftChild().get() != nullptr) {
+            num_of_smaller += findNumOfSmaller(value, node->getLeftChild());
+        }
+    }
+
+    return num_of_smaller;
+}
+
 void AVLTree::balance(std::unique_ptr<Node>& node) {
     size_t left_height = Node::computeChildHeight(node->getLeftChild());
     size_t right_height = Node::computeChildHeight(node->getRightChild());

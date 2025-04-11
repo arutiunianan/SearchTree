@@ -2,13 +2,27 @@
 
 int main() {
     SearchTree::AVLTree tree{};
-    tree.addNode(20);
-    tree.addNode(10);
-    tree.addNode(30);
-    tree.addNode(80);
-    tree.addNode(40);
-    tree.addNode(60);
-    tree.addNode(50);
-    tree.addNode(70);
-    tree.dump_gv();
+    char command{};
+
+    while (std::cin >> command) {
+        switch (command) {
+            case 'k': {
+                int n;
+                std::cin >> n;
+                tree.addNode(n);
+                break;
+            }
+            case 'q': {
+                int a;
+                int b;
+                std::cin >> a >> b;
+                std::cout << tree.findDistance(a, b) << std::endl;
+                break;
+            }
+            default:
+                std::cerr << "Unknown command\n";
+                return 1;
+        }
+    }
+    return 0;
 }
