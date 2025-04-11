@@ -13,3 +13,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED true)
 
 add_executable(tree main.cpp source/tree.cpp)
 target_include_directories(tree PUBLIC include)
+
+enable_testing()
+add_subdirectory(tests)

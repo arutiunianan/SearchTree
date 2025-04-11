@@ -3,7 +3,7 @@
 namespace SearchTree {
 
 size_t AVLTree::findDistance(int lower_key, int upper_key) const {
-    if (root.get() == nullptr) {
+    if (root.get() == nullptr || lower_key > upper_key) {
         return 0;
     }
 
