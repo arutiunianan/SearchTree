@@ -7,7 +7,7 @@ usual="\033[0m"
 TESTS_DIR=$1/test_files
 ANS_DIR=$1/ans_files
 TREE_BIN=$2
-TESTS_NUM=$3
+TESTS_NUM="$(find ${TESTS_DIR} -type f | wc -l)"
 
 if [ -d "${TESTS_DIR}" ]; then
   echo -en "${green}[==========]${usual} Running ${TESTS_NUM} tests from 1 test suites.\n"
@@ -27,7 +27,6 @@ if [ -d "${TESTS_DIR}" ]; then
     EXPECTED_OUTPUT="$(cat "$EXPECTED_FILE")"
     DIFF="$(diff <(echo "$OUTPUT") "$EXPECTED_FILE")"
 
-    #if [ -n "$DIFF" ]; then
     if ! [ "$?" -eq 0 ]; then
       echo -en "Failure\n"
       echo -en "  Actual: ${OUTPUT}\n"
