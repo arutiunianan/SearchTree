@@ -5,34 +5,35 @@
 
 namespace SearchTree {
 
-class Node {
+template <typename T>
+class Node final {
    private:
-    std::unique_ptr<Node> left_;
-    std::unique_ptr<Node> right_;
+    std::unique_ptr<Node<T>> left_;
+    std::unique_ptr<Node<T>> right_;
 
    public:
     size_t desc_num_ = 0;
     size_t height_ = 0;
-    int value_ = 0;
+    T value_ = 0;
 
    public:
-    Node(int value) : value_(value) {}
+    Node(T value) : value_(value) {}
 
-    void addLeftChild(std::unique_ptr<Node>& node) { left_ = std::move(node); }
-    void addRightChild(std::unique_ptr<Node>& node) {
+    void addLeftChild(std::unique_ptr<Node<T>>& node) { left_ = std::move(node); }
+    void addRightChild(std::unique_ptr<Node<T>>& node) {
         right_ = std::move(node);
     }
 
-    void addLeftChild(int value) { left_ = std::make_unique<Node>(value); }
-    void addRightChild(int value) { right_ = std::make_unique<Node>(value); }
+    void addLeftChild(T value) { left_ = std::make_unique<Node<T>>(value); }
+    void addRightChild(T value) { right_ = std::make_unique<Node<T>>(value); }
 
-    std::unique_ptr<Node>& getLeftChild() { return left_; }
-    std::unique_ptr<Node>& getRightChild() { return right_; }
-    static size_t computeChildHeight(const std::unique_ptr<Node>& child) {
+    std::unique_ptr<Node<T>>& getLeftChild() { return left_; }
+    std::unique_ptr<Node<T>>& getRightChild() { return right_; }
+    static size_t computeChildHeight(const std::unique_ptr<Node<T>>& child) noexcept {
         return child ? child->height_ + 1 : 0;
     }
 
-    static void swap(Node& a, Node& b) noexcept {
+    static void swap(Node<T>& a, Node<T>& b) noexcept {
         std::swap(a.left_, b.left_);
         std::swap(a.right_, b.right_);
         std::swap(a.desc_num_, b.desc_num_);
@@ -40,7 +41,7 @@ class Node {
         std::swap(a.value_, b.value_);
     }
 
-    size_t determineHeight() {
+    size_t determineHeight() noexcept {
         if (left_.get() == nullptr && right_.get() == nullptr) {
             height_ = 0;
             return height_;
@@ -52,7 +53,7 @@ class Node {
         return height_;
     }
 
-    size_t determineDescNum() {
+    size_t determineDescNum() noexcept {
         size_t left_desc_num = 0;
         size_t right_desc_num = 0;
 
@@ -66,7 +67,7 @@ class Node {
         return desc_num_;
     }
 
-    void updateParameters() {
+    void updateParameters() noexcept {
         determineHeight();
         determineDescNum();
     }
