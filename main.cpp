@@ -2,14 +2,14 @@
 
 int main() {
     SearchTree::AVLTree tree{};
-    char command{};
+    char command;
 
     while (std::cin >> command) {
         switch (command) {
             case 'k': {
                 int n;
                 std::cin >> n;
-                tree.addNode(n);
+                tree.insert(n);
                 break;
             }
             case 'q': {

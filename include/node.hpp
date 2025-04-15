@@ -29,9 +29,6 @@ class Node final {
 
     std::unique_ptr<Node<T>>& getLeftChild() { return left_; }
     std::unique_ptr<Node<T>>& getRightChild() { return right_; }
-    static size_t computeChildHeight(const std::unique_ptr<Node<T>>& child) noexcept {
-        return child ? child->height_ + 1 : 0;
-    }
 
     static void swap(Node<T>& a, Node<T>& b) noexcept {
         std::swap(a.left_, b.left_);
@@ -41,28 +38,28 @@ class Node final {
         std::swap(a.value_, b.value_);
     }
 
+    static size_t computeHeight(const std::unique_ptr<Node<T>>& node) noexcept {
+        return node ? node->height_ + 1 : 0;
+    }
     size_t determineHeight() noexcept {
         if (left_.get() == nullptr && right_.get() == nullptr) {
             height_ = 0;
             return height_;
         }
 
-        size_t left_height = computeChildHeight(left_);
-        size_t right_height = computeChildHeight(right_);
+        size_t left_height = computeHeight(left_);
+        size_t right_height = computeHeight(right_);
         height_ = std::max(left_height, right_height);
         return height_;
     }
 
+    static size_t computeDescNum(const std::unique_ptr<Node<T>>& node) noexcept {
+        return node ? node->height_ + 1 : 0;
+    }
     size_t determineDescNum() noexcept {
-        size_t left_desc_num = 0;
-        size_t right_desc_num = 0;
+        size_t left_desc_num = computeDescNum(left_);
+        size_t right_desc_num = computeDescNum(right_);
 
-        if (left_.get() != nullptr) {
-            left_desc_num = left_->desc_num_ + 1;
-        }
-        if (right_.get() != nullptr) {
-            right_desc_num = right_->desc_num_ + 1;
-        }
         desc_num_ = left_desc_num + right_desc_num;
         return desc_num_;
     }
@@ -71,6 +68,23 @@ class Node final {
         determineHeight();
         determineDescNum();
     }
+
+    void dump() const {
+        if(left_.get() != nullptr) {
+            left_->dump();
+        }
+
+        std::cout << value_ << " ";
+
+        if(right_.get() != nullptr) {
+            right_->dump();
+        }
+    }
+    
+    /*void dump(std::ostream& os) const {
+        os << value_ << " ";
+        if(left_.get() !=
+    }*/
 
     void dump_gv() const {
         std::cout << "    node" << this << "[shape=Mrecord, label=\"{" << value_

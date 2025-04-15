@@ -16,20 +16,21 @@ class AVLTree final {
     AVLTree(node_type root_value)
         : root(std::make_unique<Node<node_type>>(root_value)) {}
 
-    void addNode(int value) {
+    void insert(int value) {
         if (root.get() == nullptr) {
             root = std::make_unique<Node<node_type>>(value);
             return;
         }
-        addNode(value, root);
+        insert(value, root);
     }
 
     size_t findDistance(node_type lower_key, node_type upper_key) const;
 
+    void dump() const;
     void dump_gv() const;
 
    private:
-    void addNode(node_type value, std::unique_ptr<Node<node_type>>& node);
+    void insert(node_type value, std::unique_ptr<Node<node_type>>& node);
 
     void balance(std::unique_ptr<Node<node_type>>& node);
     void balanceLeft(std::unique_ptr<Node<node_type>>& node);

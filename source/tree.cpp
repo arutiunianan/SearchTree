@@ -7,7 +7,7 @@ size_t AVLTree::findDistance(int lower_key, int upper_key) const {
         return 0;
     }
 
-    size_t num_of_nodes = root->desc_num_ + 1;
+    size_t num_of_nodes = Node<node_type>::computeDescNum(root);;
     size_t num_of_large = findNumOfLarge(lower_key);
     size_t num_of_smaller = findNumOfSmaller(upper_key);
     return num_of_large + num_of_smaller - num_of_nodes;
@@ -56,8 +56,8 @@ size_t AVLTree::findNumOfSmaller(int value,
 }
 
 void AVLTree::balance(std::unique_ptr<Node<node_type>>& node) {
-    size_t left_height = Node<node_type>::computeChildHeight(node->getLeftChild());
-    size_t right_height = Node<node_type>::computeChildHeight(node->getRightChild());
+    size_t left_height = Node<node_type>::computeHeight(node->getLeftChild());
+    size_t right_height = Node<node_type>::computeHeight(node->getRightChild());
 
     if (right_height >= left_height + 2) {
         balanceRight(node);
@@ -68,8 +68,8 @@ void AVLTree::balance(std::unique_ptr<Node<node_type>>& node) {
 
 void AVLTree::balanceRight(std::unique_ptr<Node<node_type>>& node) {
     std::unique_ptr<Node<node_type>> right_subtree = std::move(node->getRightChild());
-    if (Node<node_type>::computeChildHeight(right_subtree->getLeftChild()) <=
-        Node<node_type>::computeChildHeight(right_subtree->getRightChild())) {
+    if (Node<node_type>::computeHeight(right_subtree->getLeftChild()) <=
+        Node<node_type>::computeHeight(right_subtree->getRightChild())) {
         node->getRightChild() = std::move(right_subtree->getLeftChild());
         node->updateParameters();
         right_subtree->getLeftChild() = std::move(node);
@@ -91,8 +91,8 @@ void AVLTree::balanceRight(std::unique_ptr<Node<node_type>>& node) {
 
 void AVLTree::balanceLeft(std::unique_ptr<Node<node_type>>& node) {
     std::unique_ptr<Node<node_type>> left_subtree = std::move(node->getLeftChild());
-    if (Node<node_type>::computeChildHeight(left_subtree->getRightChild()) <=
-        Node<node_type>::computeChildHeight(left_subtree->getLeftChild())) {
+    if (Node<node_type>::computeHeight(left_subtree->getRightChild()) <=
+        Node<node_type>::computeHeight(left_subtree->getLeftChild())) {
         node->getLeftChild() = std::move(left_subtree->getRightChild());
         node->updateParameters();
         left_subtree->getRightChild() = std::move(node);
@@ -112,18 +112,18 @@ void AVLTree::balanceLeft(std::unique_ptr<Node<node_type>>& node) {
     }
 }
 
-void AVLTree::addNode(int value, std::unique_ptr<Node<node_type>>& node) {
+void AVLTree::insert(int value, std::unique_ptr<Node<node_type>>& node) {
     if (node->value_ > value) {
         if (node->getLeftChild().get() == nullptr) {
             node->addLeftChild(value);
         } else {
-            addNode(value, node->getLeftChild());
+            insert(value, node->getLeftChild());
         }
     } else if (node->value_ < value) {
         if (node->getRightChild().get() == nullptr) {
             node->addRightChild(value);
         } else {
-            addNode(value, node->getRightChild());
+            insert(value, node->getRightChild());
         }
     } else {
         return;
@@ -131,6 +131,10 @@ void AVLTree::addNode(int value, std::unique_ptr<Node<node_type>>& node) {
 
     node->updateParameters();
     balance(node);
+}
+
+void AVLTree::dump() const {
+    root->dump();
 }
 
 void AVLTree::dump_gv() const {
