@@ -1,7 +1,7 @@
 #include <benchmark/benchmark.h>
 
-#include <set>
 #include <fstream>
+#include <set>
 
 #include "tree.hpp"
 
@@ -29,11 +29,10 @@ void runBenchmaerk() {
                 int a;
                 int b;
                 test_file >> a >> b;
-                if constexpr(std::is_same_v<T, SearchTree::AVLTree>) {
+                if constexpr (std::is_same_v<T, SearchTree::AVLTree>) {
                     tree.findDistance(a, b);
-                }
-                else {
-                    if(a > b) {
+                } else {
+                    if (a > b) {
                         continue;
                     }
                     std::distance(tree.lower_bound(a), tree.upper_bound(b));

@@ -4,4 +4,5 @@ set(ANS_FILES_DIR ${CMAKE_SOURCE_DIR}/ans_files)
 add_definitions(-DANS_FILES_DIR="${ANS_FILES_DIR}")
 
 add_subdirectory(e2e)
-add_subdirectory(banchmark)
+add_subdirectory(gtest)
+add_subdirectory(benchmark)

@@ -1,8 +1,9 @@
 #pragma once
 
-#include "node.hpp"
-
 #include <utility>
+#include <vector>
+
+#include "node.hpp"
 
 namespace SearchTree {
 
@@ -16,36 +17,49 @@ class AVLTree final {
     AVLTree(node_type root_value)
         : root(std::make_unique<Node<node_type>>(root_value)) {}
 
-    void insert(int value) {
-        if (root.get() == nullptr) {
-            root = std::make_unique<Node<node_type>>(value);
-            return;
-        }
-        insert(value, root);
-    }
+    bool operator==(const AVLTree& tree) const;
+    //bool operator!=(AVLTree tree);
 
-    size_t findDistance(node_type lower_key, node_type upper_key) const;
+    size_t size() const;
+    bool empty() const;
+    void insert(const node_type& value);
+    void erase(const node_type& value);
+    bool contains(const node_type& value) const;
+    bool balanced() const;
 
-    void dump() const;
-    void dump_gv() const;
+    size_t findDistance(const node_type& lower_key,
+                        const node_type& upper_key) const;
+
+    std::vector<node_type> getElements() const;
+    void dump(std::ostream& ostr = std::cout) const;
+    void dump_gv(std::ostream& ostr = std::cout) const;
 
    private:
-    void insert(node_type value, std::unique_ptr<Node<node_type>>& node);
+    void insert(const node_type& value, std::unique_ptr<Node<node_type>>& node);
+    void erase(const node_type& value, std::unique_ptr<Node<node_type>>& node);
+    bool contains(const node_type& value,
+                  const std::unique_ptr<Node<node_type>>& node) const;
+
+    node_type min(std::unique_ptr<Node<node_type>>& node);
+    node_type max(std::unique_ptr<Node<node_type>>& node);
 
     void balance(std::unique_ptr<Node<node_type>>& node);
     void balanceLeft(std::unique_ptr<Node<node_type>>& node);
     void balanceRight(std::unique_ptr<Node<node_type>>& node);
+    bool balanced(const std::unique_ptr<Node<node_type>>& node) const;
 
-    size_t findNumOfLarge(node_type value,
+    size_t findNumOfLarge(const node_type& value,
                           const std::unique_ptr<Node<node_type>>& node) const;
-    size_t findNumOfSmaller(node_type value,
+    size_t findNumOfSmaller(const node_type& value,
                             const std::unique_ptr<Node<node_type>>& node) const;
-    size_t findNumOfLarge(node_type value) const {
+    size_t findNumOfLarge(const node_type& value) const {
         return findNumOfLarge(value, root);
     }
-    size_t findNumOfSmaller(node_type value) const {
+    size_t findNumOfSmaller(const node_type& value) const {
         return findNumOfSmaller(value, root);
     }
 };
+
+//std::ostream& operator<<(std::ostream& ostr, const AVLTree& tree);
 
 }  // namespace SearchTree
