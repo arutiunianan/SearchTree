@@ -6,7 +6,7 @@
 #include "tree.hpp"
 
 template <typename T>
-void runBenchmaerk() {
+void runBenchmark() {
     T tree{};
     char command;
 
@@ -48,13 +48,13 @@ void runBenchmaerk() {
 
 static void BM_Tree(benchmark::State& state) {
     for (auto _ : state) {
-        runBenchmaerk<SearchTree::AVLTree>();
+        runBenchmark<SearchTree::AVLTree>();
     }
 }
 
 static void BM_Set(benchmark::State& state) {
     for (auto _ : state) {
-        runBenchmaerk<std::set<int>>();
+        runBenchmark<std::set<int>>();
     }
 }
 
