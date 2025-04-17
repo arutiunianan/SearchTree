@@ -22,7 +22,7 @@ size_t AVLTree::findNumOfLarge(
     }
 
     size_t num_of_large = 0;
-    if (node->value_ >= value) {
+    if (node->getValue() >= value) {
         if (node->getRightChild().get() != nullptr) {
             num_of_large +=
                 Node<node_type>::computeDescNum(node->getRightChild());
@@ -49,7 +49,7 @@ size_t AVLTree::findNumOfSmaller(
 
     size_t num_of_smaller = 0;
 
-    if (node->value_ <= value) {
+    if (node->getValue() <= value) {
         if (node->getLeftChild().get() != nullptr) {
             num_of_smaller +=
                 Node<node_type>::computeDescNum(node->getLeftChild());
@@ -183,13 +183,13 @@ void AVLTree::insert(const node_type& value,
         throw NodeNullException();
     }
 
-    if (node->value_ > value) {
+    if (node->getValue() > value) {
         if (!(node->getLeftChild())) {
             node->addLeftChild(value);
         } else {
             insert(value, node->getLeftChild());
         }
-    } else if (node->value_ < value) {
+    } else if (node->getValue() < value) {
         if (!(node->getRightChild())) {
             node->addRightChild(value);
         } else {
@@ -218,12 +218,12 @@ void AVLTree::erase(const node_type& value,
         throw NodeNullException();
     }
 
-    if (value < node->value_) {
+    if (value < node->getValue()) {
         if (!(node->getLeftChild())) {
             return;
         }
         erase(value, node->getLeftChild());
-    } else if (value > node->value_) {
+    } else if (value > node->getValue()) {
         if (!(node->getRightChild())) {
             return;
         }
@@ -236,11 +236,11 @@ void AVLTree::erase(const node_type& value,
         } else {
             if (Node<node_type>::computeHeight(node->getLeftChild()) >
                 Node<node_type>::computeHeight(node->getRightChild())) {
-                node->value_ = max(node->getLeftChild());
-                erase(node->value_, node->getLeftChild());
+                node->addValue(max(node->getLeftChild()));
+                erase(node->getValue(), node->getLeftChild());
             } else {
-                node->value_ = min(node->getRightChild());
-                erase(node->value_, node->getRightChild());
+                node->addValue(min(node->getRightChild()));
+                erase(node->getValue(), node->getRightChild());
             }
         }
     }
@@ -260,9 +260,9 @@ bool AVLTree::contains(const node_type& value,
         return false;
     }
 
-    if (value < node->value_) {
+    if (value < node->getValue()) {
         return contains(value, node->getLeftChild());
-    } else if (value > node->value_) {
+    } else if (value > node->getValue()) {
         return contains(value, node->getRightChild());
     }
     return true;
@@ -274,7 +274,7 @@ AVLTree::node_type AVLTree::min(std::unique_ptr<Node<node_type>>& node) const {
     }
 
     if (!node->getLeftChild()) {
-        return node->value_;
+        return node->getValue();
     }
     return min(node->getLeftChild());
 }
@@ -285,7 +285,7 @@ AVLTree::node_type AVLTree::max(std::unique_ptr<Node<node_type>>& node) const {
     }
 
     if (!node->getRightChild()) {
-        return node->value_;
+        return node->getValue();
     }
     return max(node->getRightChild());
 }

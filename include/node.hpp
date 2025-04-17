@@ -13,9 +13,7 @@ class Node final {
 
     size_t desc_num_ = 0;
     size_t height_ = 0;
-
-   public:
-    T value_ = 0;
+    T value_;
 
    public:
     Node(T value) : value_(value) {}
@@ -52,6 +50,9 @@ class Node final {
 
     std::unique_ptr<Node<T>>& getLeftChild() { return left_; }
     std::unique_ptr<Node<T>>& getRightChild() { return right_; }
+
+    T getValue() { return value_; };
+    void addValue(T value) { value_ = value; }
 
     static void swap(Node<T>& a, Node<T>& b) noexcept {
         std::swap(a.left_, b.left_);
