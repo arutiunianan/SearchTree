@@ -17,8 +17,11 @@ size_t AVLTree::findDistance(const node_type& lower_key,
 size_t AVLTree::findNumOfLarge(
     const node_type& value,
     const std::unique_ptr<Node<node_type>>& node) const {
-    size_t num_of_large = 0;
+    if (!node) {
+        throw NodeNullException();
+    }
 
+    size_t num_of_large = 0;
     if (node->value_ >= value) {
         if (node->getRightChild().get() != nullptr) {
             num_of_large +=
@@ -40,6 +43,10 @@ size_t AVLTree::findNumOfLarge(
 size_t AVLTree::findNumOfSmaller(
     const node_type& value,
     const std::unique_ptr<Node<node_type>>& node) const {
+    if (!node) {
+        throw NodeNullException();
+    }
+
     size_t num_of_smaller = 0;
 
     if (node->value_ <= value) {
@@ -61,6 +68,10 @@ size_t AVLTree::findNumOfSmaller(
 }
 
 void AVLTree::balance(std::unique_ptr<Node<node_type>>& node) {
+    if (!node) {
+        throw NodeNullException();
+    }
+
     size_t left_height = Node<node_type>::computeHeight(node->getLeftChild());
     size_t right_height = Node<node_type>::computeHeight(node->getRightChild());
 
@@ -69,9 +80,17 @@ void AVLTree::balance(std::unique_ptr<Node<node_type>>& node) {
     } else if (left_height >= right_height + 2) {
         balanceLeft(node);
     }
+
+    if (balanced(node)) {
+        throw UnbalancedTreeException();
+    }
 }
 
 void AVLTree::balanceRight(std::unique_ptr<Node<node_type>>& node) {
+    if (!node) {
+        throw NodeNullException();
+    }
+
     std::unique_ptr<Node<node_type>> right_subtree =
         std::move(node->getRightChild());
     if (Node<node_type>::computeHeight(right_subtree->getLeftChild()) <=
@@ -96,6 +115,10 @@ void AVLTree::balanceRight(std::unique_ptr<Node<node_type>>& node) {
 }
 
 void AVLTree::balanceLeft(std::unique_ptr<Node<node_type>>& node) {
+    if (!node) {
+        throw NodeNullException();
+    }
+
     std::unique_ptr<Node<node_type>> left_subtree =
         std::move(node->getLeftChild());
     if (Node<node_type>::computeHeight(left_subtree->getRightChild()) <=
@@ -127,10 +150,15 @@ bool AVLTree::balanced() const {
 }
 
 bool AVLTree::balanced(const std::unique_ptr<Node<node_type>>& node) const {
-    int left_height = Node<node_type>::computeHeight(node->getLeftChild());
-    int right_height = Node<node_type>::computeHeight(node->getRightChild());
+    if (!node) {
+        throw NodeNullException();
+    }
 
-    if ((std::abs(left_height - right_height) >= 2) ||
+    size_t left_height = Node<node_type>::computeHeight(node->getLeftChild());
+    size_t right_height = Node<node_type>::computeHeight(node->getRightChild());
+
+    if ((left_height >= 2 + right_height) ||
+        (right_height >= 2 + left_height) ||
         (left_height != 0 && !balanced(node->getLeftChild())) ||
         (right_height != 0 && !balanced(node->getRightChild()))) {
         return false;
@@ -152,18 +180,25 @@ void AVLTree::insert(const node_type& value) {
         return;
     }
     insert(value, root);
+    if (balanced(root)) {
+        throw UnbalancedTreeException();
+    }
 }
 
 void AVLTree::insert(const node_type& value,
                      std::unique_ptr<Node<node_type>>& node) {
+    if (!node) {
+        throw NodeNullException();
+    }
+
     if (node->value_ > value) {
-        if (node->getLeftChild().get() == nullptr) {
+        if (!(node->getLeftChild())) {
             node->addLeftChild(value);
         } else {
             insert(value, node->getLeftChild());
         }
     } else if (node->value_ < value) {
-        if (node->getRightChild().get() == nullptr) {
+        if (!(node->getRightChild())) {
             node->addRightChild(value);
         } else {
             insert(value, node->getRightChild());
@@ -178,16 +213,25 @@ void AVLTree::insert(const node_type& value,
 
 void AVLTree::erase(const node_type& value) {
     erase(value, root);
+    if (balanced(root)) {
+        throw UnbalancedTreeException();
+    }
 }
 void AVLTree::erase(const node_type& value,
                     std::unique_ptr<Node<node_type>>& node) {
     if (!node) {
-        return;
+        throw NodeNullException();
     }
 
     if (value < node->value_) {
+        if (!(node->getLeftChild())) {
+            return;
+        }
         erase(value, node->getLeftChild());
     } else if (value > node->value_) {
+        if (!(node->getRightChild())) {
+            return;
+        }
         erase(value, node->getRightChild());
     } else {
         if (!node->getLeftChild()) {
@@ -229,14 +273,22 @@ bool AVLTree::contains(const node_type& value,
     return true;
 }
 
-AVLTree::node_type AVLTree::min(std::unique_ptr<Node<node_type>>& node) {
+AVLTree::node_type AVLTree::min(std::unique_ptr<Node<node_type>>& node) const {
+    if (!node) {
+        throw NodeNullException();
+    }
+
     if (!node->getLeftChild()) {
         return node->value_;
     }
     return min(node->getLeftChild());
 }
 
-AVLTree::node_type AVLTree::max(std::unique_ptr<Node<node_type>>& node) {
+AVLTree::node_type AVLTree::max(std::unique_ptr<Node<node_type>>& node) const {
+    if (!node) {
+        throw NodeNullException();
+    }
+
     if (!node->getRightChild()) {
         return node->value_;
     }
@@ -271,16 +323,18 @@ bool AVLTree::operator==(const AVLTree& tree) const {
 
 void AVLTree::dump(std::ostream& ostr) const {
     if (!empty()) {
-        root->dump(ostr);
+        throw EmptyTreeException();
     }
+    root->dump(ostr);
 }
 
 void AVLTree::dump_gv(std::ostream& ostr) const {
     if (!empty()) {
-        ostr << "digraph structs {\n";
-        root->dump_gv(ostr);
-        ostr << "}";
+        throw EmptyTreeException();
     }
+    ostr << "digraph structs {\n";
+    root->dump_gv(ostr);
+    ostr << "}";
 }
 
 }  // namespace SearchTree

@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "node.hpp"
+#include "tree_exception.hpp"
 
 namespace SearchTree {
 
@@ -40,8 +41,8 @@ class AVLTree final {
     bool contains(const node_type& value,
                   const std::unique_ptr<Node<node_type>>& node) const;
 
-    node_type min(std::unique_ptr<Node<node_type>>& node);
-    node_type max(std::unique_ptr<Node<node_type>>& node);
+    node_type min(std::unique_ptr<Node<node_type>>& node) const;
+    node_type max(std::unique_ptr<Node<node_type>>& node) const;
 
     void balance(std::unique_ptr<Node<node_type>>& node);
     void balanceLeft(std::unique_ptr<Node<node_type>>& node);
