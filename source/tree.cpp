@@ -80,10 +80,6 @@ void AVLTree::balance(std::unique_ptr<Node<node_type>>& node) {
     } else if (left_height >= right_height + 2) {
         balanceLeft(node);
     }
-
-    if (balanced(node)) {
-        throw UnbalancedTreeException();
-    }
 }
 
 void AVLTree::balanceRight(std::unique_ptr<Node<node_type>>& node) {
@@ -150,10 +146,6 @@ bool AVLTree::balanced() const {
 }
 
 bool AVLTree::balanced(const std::unique_ptr<Node<node_type>>& node) const {
-    if (!node) {
-        throw NodeNullException();
-    }
-
     size_t left_height = Node<node_type>::computeHeight(node->getLeftChild());
     size_t right_height = Node<node_type>::computeHeight(node->getRightChild());
 
@@ -180,7 +172,7 @@ void AVLTree::insert(const node_type& value) {
         return;
     }
     insert(value, root);
-    if (balanced(root)) {
+    if (!balanced()) {
         throw UnbalancedTreeException();
     }
 }
@@ -212,8 +204,11 @@ void AVLTree::insert(const node_type& value,
 }
 
 void AVLTree::erase(const node_type& value) {
+    if (empty()) {
+        return;
+    }
     erase(value, root);
-    if (balanced(root)) {
+    if (!balanced()) {
         throw UnbalancedTreeException();
     }
 }
@@ -322,14 +317,14 @@ bool AVLTree::operator==(const AVLTree& tree) const {
 //}
 
 void AVLTree::dump(std::ostream& ostr) const {
-    if (!empty()) {
+    if (empty()) {
         throw EmptyTreeException();
     }
     root->dump(ostr);
 }
 
 void AVLTree::dump_gv(std::ostream& ostr) const {
-    if (!empty()) {
+    if (empty()) {
         throw EmptyTreeException();
     }
     ostr << "digraph structs {\n";

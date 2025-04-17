@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(searchtree)
 
 add_compile_options(
+    -Werror
     -Wall
     -Wextra
     -Wpedantic

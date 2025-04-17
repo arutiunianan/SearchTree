@@ -21,15 +21,15 @@ class AVLTree final {
     bool operator==(const AVLTree& tree) const;
     //bool operator!=(AVLTree tree);
 
-    size_t size() const;
-    bool empty() const;
+    [[nodiscard]] size_t size() const;
+    [[nodiscard]] bool empty() const;
     void insert(const node_type& value);
     void erase(const node_type& value);
-    bool contains(const node_type& value) const;
-    bool balanced() const;
+    [[nodiscard]] bool contains(const node_type& value) const;
+    [[nodiscard]] bool balanced() const;
 
-    size_t findDistance(const node_type& lower_key,
-                        const node_type& upper_key) const;
+    [[nodiscard]] size_t findDistance(const node_type& lower_key,
+                                      const node_type& upper_key) const;
 
     std::vector<node_type> getElements() const;
     void dump(std::ostream& ostr = std::cout) const;

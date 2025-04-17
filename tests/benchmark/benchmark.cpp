@@ -30,12 +30,13 @@ void runBenchmark() {
                 int b;
                 test_file >> a >> b;
                 if constexpr (std::is_same_v<T, SearchTree::AVLTree>) {
-                    tree.findDistance(a, b);
+                    (void)tree.findDistance(a, b);
                 } else {
                     if (a > b) {
                         continue;
                     }
-                    std::distance(tree.lower_bound(a), tree.upper_bound(b));
+                    (void)std::distance(tree.lower_bound(a),
+                                        tree.upper_bound(b));
                 }
                 break;
             }
