@@ -42,7 +42,7 @@ def generate_test_files(test_filename, ans_test_filename, num_keys, num_queries,
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python generator.py <number of test>")
+        print("Usage:\n  python generator.py <number of test>")
         sys.exit(1)
 
     test_filename = "test_files/test_input" + sys.argv[1] + ".txt"

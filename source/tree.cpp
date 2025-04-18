@@ -23,16 +23,16 @@ size_t AVLTree::findNumOfLarge(
 
     size_t num_of_large = 0;
     if (node->getValue() >= value) {
-        if (node->getRightChild().get() != nullptr) {
+        if (node->getRightChild()) {
             num_of_large +=
                 Node<node_type>::computeDescNum(node->getRightChild());
         }
-        if (node->getLeftChild().get() != nullptr) {
+        if (node->getLeftChild()) {
             num_of_large += findNumOfLarge(value, node->getLeftChild());
         }
         ++num_of_large;
     } else {
-        if (node->getRightChild().get() != nullptr) {
+        if (node->getRightChild()) {
             num_of_large += findNumOfLarge(value, node->getRightChild());
         }
     }
@@ -50,16 +50,16 @@ size_t AVLTree::findNumOfSmaller(
     size_t num_of_smaller = 0;
 
     if (node->getValue() <= value) {
-        if (node->getLeftChild().get() != nullptr) {
+        if (node->getLeftChild()) {
             num_of_smaller +=
                 Node<node_type>::computeDescNum(node->getLeftChild());
         }
-        if (node->getRightChild().get() != nullptr) {
+        if (node->getRightChild()) {
             num_of_smaller += findNumOfSmaller(value, node->getRightChild());
         }
         ++num_of_smaller;
     } else {
-        if (node->getLeftChild().get() != nullptr) {
+        if (node->getLeftChild()) {
             num_of_smaller += findNumOfSmaller(value, node->getLeftChild());
         }
     }
@@ -172,9 +172,6 @@ void AVLTree::insert(const node_type& value) {
         return;
     }
     insert(value, root);
-    if (!balanced()) {
-        throw UnbalancedTreeException();
-    }
 }
 
 void AVLTree::insert(const node_type& value,
@@ -208,9 +205,6 @@ void AVLTree::erase(const node_type& value) {
         return;
     }
     erase(value, root);
-    if (!balanced()) {
-        throw UnbalancedTreeException();
-    }
 }
 void AVLTree::erase(const node_type& value,
                     std::unique_ptr<Node<node_type>>& node) {

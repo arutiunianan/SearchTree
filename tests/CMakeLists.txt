@@ -5,4 +5,6 @@ add_definitions(-DANS_FILES_DIR="${ANS_FILES_DIR}")
 
 add_subdirectory(e2e)
 add_subdirectory(gtest)
-add_subdirectory(benchmark)
+if(BENCHMARK)
+    add_subdirectory(benchmark)
+endif()

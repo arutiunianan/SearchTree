@@ -1,20 +1,21 @@
 #include <benchmark/benchmark.h>
-
+#include <filesystem>
 #include <fstream>
 #include <set>
+#include <string>
+#include <vector>
 
 #include "tree.hpp"
 
-template <typename T>
-void runBenchmark() {
-    T tree{};
-    char command;
+namespace fs = std::filesystem;
 
-    std::ifstream test_file;
-    std::string file_path = std::string(TEST_FILES_DIR) + "/test_input14.txt";
-    test_file.open(file_path);
+template <typename T>
+void runTest(const std::string& file_path) {
+    T tree;
+    char command;
+    std::ifstream test_file(file_path);
     if (!test_file.is_open()) {
-        throw std::runtime_error("\n Failed to open the file: " + file_path);
+        throw std::runtime_error("Failed to open file: " + file_path);
     }
 
     while (test_file >> command) {
@@ -26,40 +27,59 @@ void runBenchmark() {
                 break;
             }
             case 'q': {
-                int a;
-                int b;
+                int a, b;
                 test_file >> a >> b;
                 if constexpr (std::is_same_v<T, SearchTree::AVLTree>) {
                     (void)tree.findDistance(a, b);
                 } else {
-                    if (a > b) {
-                        continue;
+                    if (a <= b) {
+                        (void)std::distance(tree.lower_bound(a),
+                                            tree.upper_bound(b));
                     }
-                    (void)std::distance(tree.lower_bound(a),
-                                        tree.upper_bound(b));
                 }
                 break;
             }
             default:
-                std::cerr << "Unknown command\n";
+                break;
         }
     }
-    test_file.close();
 }
 
-static void BM_Tree(benchmark::State& state) {
-    for (auto _ : state) {
-        runBenchmark<SearchTree::AVLTree>();
+int main(int argc, char** argv) {
+    std::vector<fs::path> files;
+    for (auto& entry : fs::directory_iterator(TEST_FILES_DIR)) {
+        if (entry.is_regular_file() && entry.path().extension() == ".txt") {
+            files.push_back(entry.path());
+        }
     }
-}
+    //std::sort(files.begin(), files.end());
 
-static void BM_Set(benchmark::State& state) {
-    for (auto _ : state) {
-        runBenchmark<std::set<int>>();
+    for (auto& path : files) {
+        auto filename = path.filename().string();
+        int test_num = 0;
+        size_t p = filename.find("test_input");
+        if (p != std::string::npos) {
+            p += strlen("test_input");
+            size_t q = filename.find('.', p);
+            test_num = std::stoi(filename.substr(p, q - p));
+        }
+        std::string name_tree = "AVLTree/TEST" + std::to_string(test_num);
+        std::string name_set = "std::set/TEST" + std::to_string(test_num);
+
+        benchmark::RegisterBenchmark(name_tree.c_str(), [path](benchmark::State&
+                                                                   state) {
+            for (auto _ : state)
+                runTest<SearchTree::AVLTree>(path.string());
+        })->Iterations(1);
+
+        benchmark::RegisterBenchmark(name_set.c_str(), [path](benchmark::State&
+                                                                  state) {
+            for (auto _ : state)
+                runTest<std::set<int>>(path.string());
+        })->Iterations(1);
     }
+
+    benchmark::Initialize(&argc, argv);
+    benchmark::RunSpecifiedBenchmarks();
+    return 0;
 }
-
-BENCHMARK(BM_Tree)->Iterations(1);
-BENCHMARK(BM_Set)->Iterations(1);
-
-BENCHMARK_MAIN();
