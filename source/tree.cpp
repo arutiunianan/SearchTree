@@ -14,6 +14,9 @@ size_t AVLTree::findDistance(const node_type& lower_key,
     return num_of_large + num_of_smaller - num_of_nodes;
 }
 
+size_t AVLTree::findNumOfLarge(const node_type& value) const {
+    return findNumOfLarge(value, root);
+}
 size_t AVLTree::findNumOfLarge(
     const node_type& value,
     const std::unique_ptr<Node<node_type>>& node) const {
@@ -40,6 +43,9 @@ size_t AVLTree::findNumOfLarge(
     return num_of_large;
 }
 
+size_t AVLTree::findNumOfSmaller(const node_type& value) const {
+    return findNumOfSmaller(value, root);
+}
 size_t AVLTree::findNumOfSmaller(
     const node_type& value,
     const std::unique_ptr<Node<node_type>>& node) const {
@@ -139,24 +145,43 @@ void AVLTree::balanceLeft(std::unique_ptr<Node<node_type>>& node) {
 }
 
 bool AVLTree::balanced() const {
-    if (empty()) {
-        return true;
+    for (auto it = begin(); it != end(); ++it) {
+        if (!balanced(it)) {
+            return false;
+        }
     }
-    return balanced(root);
+    return true;
 }
-
-bool AVLTree::balanced(const std::unique_ptr<Node<node_type>>& node) const {
-    size_t left_height = Node<node_type>::computeHeight(node->getLeftChild());
-    size_t right_height = Node<node_type>::computeHeight(node->getRightChild());
+bool AVLTree::balanced(const_iterator node_it) const {
+    size_t left_height =
+        Node<node_type>::computeHeight(node_it->getLeftChild());
+    size_t right_height =
+        Node<node_type>::computeHeight(node_it->getRightChild());
 
     if ((left_height >= 2 + right_height) ||
-        (right_height >= 2 + left_height) ||
-        (left_height != 0 && !balanced(node->getLeftChild())) ||
-        (right_height != 0 && !balanced(node->getRightChild()))) {
+        (right_height >= 2 + left_height)) {
         return false;
     }
-
     return true;
+}
+
+AVLTree::iterator AVLTree::begin() {
+    return iterator(root.get());
+}
+AVLTree::iterator AVLTree::end() {
+    return iterator();
+}
+AVLTree::const_iterator AVLTree::begin() const {
+    return const_iterator(root.get());
+}
+AVLTree::const_iterator AVLTree::end() const {
+    return const_iterator();
+}
+AVLTree::const_iterator AVLTree::cbegin() const {
+    return const_iterator(root.get());
+}
+AVLTree::const_iterator AVLTree::cend() const {
+    return const_iterator();
 }
 
 size_t AVLTree::size() const {
@@ -173,7 +198,6 @@ void AVLTree::insert(const node_type& value) {
     }
     insert(value, root);
 }
-
 void AVLTree::insert(const node_type& value,
                      std::unique_ptr<Node<node_type>>& node) {
     if (!node) {
@@ -288,10 +312,15 @@ std::vector<AVLTree::node_type> AVLTree::getElements() const {
     if (empty()) {
         return std::vector<node_type>{};
     }
-    return root->getElements();
+
+    std::vector<node_type> elements;
+    for (auto it = begin(); it != end(); ++it) {
+        elements.push_back(it->getValue());
+    }
+    return elements;
 }
 
-bool AVLTree::operator==(const AVLTree& tree) const {
+bool AVLTree::operator==(AVLTree const& tree) const {
     if (!root && !(tree.root)) {
         return true;
     }
@@ -306,23 +335,26 @@ bool AVLTree::operator==(const AVLTree& tree) const {
     return false;
 }
 
-//bool AVLTree::operator!=(AVLTree tree) {
-
-//}
+bool AVLTree::operator!=(AVLTree const& tree) const {
+    return !(*this == tree);
+}
 
 void AVLTree::dump(std::ostream& ostr) const {
     if (empty()) {
         throw EmptyTreeException();
     }
-    root->dump(ostr);
+
+    for (auto it = begin(); it != end(); ++it) {
+        it->dump(ostr);
+    }
 }
 
-void AVLTree::dump_gv(std::ostream& ostr) const {
+void AVLTree::dumpgv(std::ostream& ostr) const {
     if (empty()) {
         throw EmptyTreeException();
     }
     ostr << "digraph structs {\n";
-    root->dump_gv(ostr);
+    root->dumpgv(ostr);
     ostr << "}";
 }
 

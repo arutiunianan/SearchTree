@@ -16,9 +16,9 @@ class Node final {
     T value_;
 
    public:
-    Node(T value) : value_(value) {}
+    explicit Node(T value) : value_(value) {}
 
-    bool operator==(const Node& node) const {
+    bool operator==(Node const& node) const {
         if (desc_num_ != node.desc_num_ || height_ != node.height_ ||
             value_ != node.value_) {
             return false;
@@ -36,7 +36,7 @@ class Node final {
 
         return true;
     }
-    //bool operator!=(AVLTree tree);
+    bool operator!=(Node const& node) const { return !(*this == node); }
 
     void addLeftChild(std::unique_ptr<Node<T>>& node) {
         left_ = std::move(node);
@@ -47,12 +47,19 @@ class Node final {
 
     void addLeftChild(T value) { left_ = std::make_unique<Node<T>>(value); }
     void addRightChild(T value) { right_ = std::make_unique<Node<T>>(value); }
-
-    std::unique_ptr<Node<T>>& getLeftChild() { return left_; }
-    std::unique_ptr<Node<T>>& getRightChild() { return right_; }
-
-    const T& getValue() { return value_; };
     void addValue(T value) { value_ = value; }
+
+    T& getValue() noexcept { return value_; }
+    std::unique_ptr<Node<T>>& getLeftChild() noexcept { return left_; }
+    std::unique_ptr<Node<T>>& getRightChild() noexcept { return right_; }
+
+    const T& getValue() const noexcept { return value_; }
+    const std::unique_ptr<Node<T>>& getLeftChild() const noexcept {
+        return left_;
+    }
+    const std::unique_ptr<Node<T>>& getRightChild() const noexcept {
+        return right_;
+    }
 
     static void swap(Node<T>& a, Node<T>& b) noexcept {
         std::swap(a.left_, b.left_);
@@ -94,35 +101,9 @@ class Node final {
         determineDescNum();
     }
 
-    std::vector<T> getElements() const {
-        std::vector<T> elements;
-        if (left_) {
-            std::vector<T> left_elements = left_->getElements();
-            elements.insert(elements.end(), left_elements.begin(),
-                            left_elements.end());
-        }
-        elements.push_back(value_);
-        if (right_) {
-            std::vector<T> right_elements = right_->getElements();
-            elements.insert(elements.end(), right_elements.begin(),
-                            right_elements.end());
-        }
-        return elements;
-    }
+    void dump(std::ostream& ostr = std::cout) const { ostr << value_ << " "; }
 
-    void dump(std::ostream& ostr = std::cout) const {
-        if (left_.get() != nullptr) {
-            left_->dump();
-        }
-
-        ostr << value_ << " ";
-
-        if (right_.get() != nullptr) {
-            right_->dump();
-        }
-    }
-
-    void dump_gv(std::ostream& ostr = std::cout) const {
+    void dumpgv(std::ostream& ostr = std::cout) const {
         ostr << "    node" << this << "[shape=Mrecord, label=\"{" << value_
              << " | desc_num = " << desc_num_ << ", height = " << height_
              << "}\", style=filled, fillcolor=\"#C5E384\"]\n";
@@ -130,13 +111,13 @@ class Node final {
         if (left_.get() != nullptr) {
             ostr << "    node" << this << "->node" << left_.get()
                  << " [color = \"#ff0000\"]\n";
-            left_->dump_gv();
+            left_->dumpgv(ostr);
         }
 
         if (right_.get() != nullptr) {
             ostr << "    node" << this << "->node" << right_.get()
                  << " [color = \"#40ff00\"]\n";
-            right_->dump_gv();
+            right_->dumpgv(ostr);
         }
     }
 };
