@@ -1,7 +1,7 @@
 #include "tree.hpp"
 
 int main() {
-    SearchTree::AVLTree tree{};
+    SearchTree::AVLTree<int> tree{};
     char command;
 
     try {

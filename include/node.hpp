@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <memory>
+#include <functional>
 
 namespace SearchTree {
 
@@ -20,7 +21,7 @@ class Node final {
 
     bool operator==(Node const& node) const {
         if (desc_num_ != node.desc_num_ || height_ != node.height_ ||
-            value_ != node.value_) {
+            std::not_equal_to<>{}(value_, node.value_)) {
             return false;
         }
 

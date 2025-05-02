@@ -29,7 +29,7 @@ void runTest(const std::string& file_path) {
             case 'q': {
                 int a, b;
                 test_file >> a >> b;
-                if constexpr (std::is_same_v<T, SearchTree::AVLTree>) {
+                if constexpr (std::is_same_v<T, SearchTree::AVLTree<int>>) {
                     (void)tree.findDistance(a, b);
                 } else {
                     if (a <= b) {
@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
         benchmark::RegisterBenchmark(name_tree.c_str(), [path](benchmark::State&
                                                                    state) {
             for (auto _ : state)
-                runTest<SearchTree::AVLTree>(path.string());
+                runTest<SearchTree::AVLTree<int>>(path.string());
         })->Iterations(1);
 
         benchmark::RegisterBenchmark(name_set.c_str(), [path](benchmark::State&

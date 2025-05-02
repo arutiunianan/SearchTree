@@ -5,7 +5,7 @@
 #include "tree.hpp"
 
 void checkTreeInsert(const std::vector<int>& testNumbers) {
-    SearchTree::AVLTree tree{};
+    SearchTree::AVLTree<int> tree{};
     for (int num : testNumbers) {
         tree.insert(num);
     }
@@ -82,30 +82,30 @@ TEST(AVLTree_insert, Subtestv_15) {
 }
 
 TEST(AVLTree_operator_eq, Subtestv_1) {
-    SearchTree::AVLTree tree1;
-    SearchTree::AVLTree tree2;
+    SearchTree::AVLTree<int> tree1;
+    SearchTree::AVLTree<int> tree2;
     ASSERT_TRUE(tree1 == tree2);
 }
 
 TEST(AVLTree_operator_eq, Subtestv_2) {
-    SearchTree::AVLTree tree1;
-    SearchTree::AVLTree tree2;
+    SearchTree::AVLTree<int> tree1;
+    SearchTree::AVLTree<int> tree2;
     tree1.insert(10);
     tree2.insert(10);
     ASSERT_TRUE(tree1 == tree2);
 }
 
 TEST(AVLTree_operator_eq, Subtestv_3) {
-    SearchTree::AVLTree tree1;
-    SearchTree::AVLTree tree2;
+    SearchTree::AVLTree<int> tree1;
+    SearchTree::AVLTree<int> tree2;
     tree1.insert(10);
     tree2.insert(15);
     ASSERT_FALSE(tree1 == tree2);
 }
 
 TEST(AVLTree_operator_eq, Subtestv_4) {
-    SearchTree::AVLTree tree1;
-    SearchTree::AVLTree tree2;
+    SearchTree::AVLTree<int> tree1;
+    SearchTree::AVLTree<int> tree2;
     tree1.insert(10);
     tree1.insert(20);
     tree2.insert(10);
@@ -113,8 +113,8 @@ TEST(AVLTree_operator_eq, Subtestv_4) {
 }
 
 TEST(AVLTree_operator_eq, Subtestv_5) {
-    SearchTree::AVLTree tree1;
-    SearchTree::AVLTree tree2;
+    SearchTree::AVLTree<int> tree1;
+    SearchTree::AVLTree<int> tree2;
     tree1.insert(10);
     tree1.insert(20);
     tree2.insert(10);
@@ -123,8 +123,8 @@ TEST(AVLTree_operator_eq, Subtestv_5) {
 }
 
 TEST(AVLTree_operator_eq, Subtestv_6) {
-    SearchTree::AVLTree tree1;
-    SearchTree::AVLTree tree2;
+    SearchTree::AVLTree<int> tree1;
+    SearchTree::AVLTree<int> tree2;
     for (int v : {10, 5, 15, 3, 7, 12, 18}) {
         tree1.insert(v);
         tree2.insert(v);
@@ -135,8 +135,8 @@ TEST(AVLTree_operator_eq, Subtestv_6) {
 }
 
 TEST(AVLTree_operator_eq, Subtestv_7) {
-    SearchTree::AVLTree tree1;
-    SearchTree::AVLTree tree2;
+    SearchTree::AVLTree<int> tree1;
+    SearchTree::AVLTree<int> tree2;
     for (int v : {10, 5, 15, 3, 7, 12, 18}) {
         tree1.insert(v);
         tree2.insert(v);
@@ -147,8 +147,8 @@ TEST(AVLTree_operator_eq, Subtestv_7) {
 }
 
 TEST(AVLTree_operator_eq, Subtestv_8) {
-    SearchTree::AVLTree tree1;
-    SearchTree::AVLTree tree2;
+    SearchTree::AVLTree<int> tree1;
+    SearchTree::AVLTree<int> tree2;
     for (int v : {10, 5, 15, 3, 7, 12, 18}) {
         tree1.insert(v);
         tree2.insert(v);
@@ -158,8 +158,8 @@ TEST(AVLTree_operator_eq, Subtestv_8) {
 }
 
 TEST(AVLTree_operator_eq, Subtestv_9) {
-    SearchTree::AVLTree tree1;
-    SearchTree::AVLTree tree2;
+    SearchTree::AVLTree<int> tree1;
+    SearchTree::AVLTree<int> tree2;
     for (int v : {20, 10, 30, 5, 15, 25, 35}) {
         tree1.insert(v);
         tree2.insert(v);
@@ -172,15 +172,15 @@ TEST(AVLTree_operator_eq, Subtestv_9) {
 }
 
 TEST(AVLTree_operator_eq, Subtestv_10) {
-    SearchTree::AVLTree tree1;
-    SearchTree::AVLTree tree2;
+    SearchTree::AVLTree<int> tree1;
+    SearchTree::AVLTree<int> tree2;
     tree2.insert(10);
     ASSERT_FALSE(tree1 == tree2);
 }
 
 void checkTreeAfterErase(const std::vector<int>& insertNumbers,
                          const std::vector<int>& eraseNumbers) {
-    SearchTree::AVLTree tree;
+    SearchTree::AVLTree<int> tree;
     for (int v : insertNumbers) {
         tree.insert(v);
     }
@@ -237,24 +237,24 @@ TEST(AVLTree_erase, Subtestv_10) {
 }
 
 TEST(AVLTree_contains, Subtestv_1) {
-    SearchTree::AVLTree tree;
+    SearchTree::AVLTree<int> tree;
     ASSERT_FALSE(tree.contains(10));
 }
 
 TEST(AVLTree_contains, Subtestv_2) {
-    SearchTree::AVLTree tree;
+    SearchTree::AVLTree<int> tree;
     tree.insert(10);
     ASSERT_TRUE(tree.contains(10));
 }
 
 TEST(AVLTree_contains, Subtestv_3) {
-    SearchTree::AVLTree tree;
+    SearchTree::AVLTree<int> tree;
     tree.insert(10);
     ASSERT_FALSE(tree.contains(15));
 }
 
 TEST(AVLTree_contains, Subtestv_4) {
-    SearchTree::AVLTree tree;
+    SearchTree::AVLTree<int> tree;
     for (int v : {10, 5, 15, 3, 7}) {
         tree.insert(v);
     }
@@ -262,7 +262,7 @@ TEST(AVLTree_contains, Subtestv_4) {
 }
 
 TEST(AVLTree_contains, Subtestv_5) {
-    SearchTree::AVLTree tree;
+    SearchTree::AVLTree<int> tree;
     for (int v : {10, 5, 15, 3, 7}) {
         tree.insert(v);
     }
@@ -270,7 +270,7 @@ TEST(AVLTree_contains, Subtestv_5) {
 }
 
 TEST(AVLTree_contains, Subtestv_6) {
-    SearchTree::AVLTree tree;
+    SearchTree::AVLTree<int> tree;
     for (int v : {20, 10, 30}) {
         tree.insert(v);
     }
@@ -279,7 +279,7 @@ TEST(AVLTree_contains, Subtestv_6) {
 }
 
 TEST(AVLTree_contains, Subtestv_7) {
-    SearchTree::AVLTree tree;
+    SearchTree::AVLTree<int> tree;
     tree.insert(25);
     tree.erase(25);
     tree.insert(25);
@@ -287,7 +287,7 @@ TEST(AVLTree_contains, Subtestv_7) {
 }
 
 TEST(AVLTree_contains, Subtestv_8) {
-    SearchTree::AVLTree tree;
+    SearchTree::AVLTree<int> tree;
     for (int i = 0; i < 1000; ++i) {
         tree.insert(i);
     }
@@ -295,13 +295,13 @@ TEST(AVLTree_contains, Subtestv_8) {
 }
 
 TEST(AVLTree_contains, Subtestv_9) {
-    SearchTree::AVLTree tree;
+    SearchTree::AVLTree<int> tree;
     tree.insert(std::numeric_limits<int>::min());
     ASSERT_TRUE(tree.contains(std::numeric_limits<int>::min()));
 }
 
 TEST(AVLTree_contains, Subtest_10) {
-    SearchTree::AVLTree tree;
+    SearchTree::AVLTree<int> tree;
     tree.insert(std::numeric_limits<int>::max());
     ASSERT_TRUE(tree.contains(std::numeric_limits<int>::max()));
 }

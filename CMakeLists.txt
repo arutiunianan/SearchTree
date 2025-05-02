@@ -12,7 +12,7 @@ add_compile_options(
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
-add_executable(tree main.cpp source/tree.cpp)
+add_executable(tree main.cpp)
 target_include_directories(tree PUBLIC include)
 
 enable_testing()
