@@ -32,13 +32,14 @@ int main() {
                             "\n Invalid second number for the request");
                     }
 
-                    std::cout << tree.findDistance(a, b) << std::endl;
+                    std::cout << tree.findDistance(a, b) << " ";
                     break;
                 }
                 default:
                     throw std::invalid_argument("\n Unknown command");
             }
         }
+        std::cout << std::endl;
     } catch (const SearchTree::AVLException& e) {
         std::cerr << "Tree error: " << e.what() << std::endl;
     } catch (const std::invalid_argument& e) {

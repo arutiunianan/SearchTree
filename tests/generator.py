@@ -38,7 +38,8 @@ def generate_test_files(test_filename, ans_test_filename, num_keys, num_queries,
                     left_index = bisect.bisect_left(sorted_keys, left)
                     right_index = bisect.bisect_right(sorted_keys, right)
                     count = right_index - left_index
-                ansf.write(str(count) + "\n")
+                ansf.write(str(count) + " ")
+        ansf.write("\n")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
