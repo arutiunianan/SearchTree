@@ -7,6 +7,10 @@
 
 #include "tree.hpp"
 
+#ifndef TEST_FILES_DIR
+#error "TEST_FILES_DIR макрос не определён"
+#endif
+
 namespace fs = std::filesystem;
 
 template <typename T>

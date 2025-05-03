@@ -75,7 +75,7 @@ ctest --output-on-failure --test-dir build
 ./build/tests/benchmark/benchmarkex
 ```
 
-To run benchmark graphs that compare with std::set:
+To build a comparison graph with std::set:
 
 ```
 cmake --build build --target bench_graph
