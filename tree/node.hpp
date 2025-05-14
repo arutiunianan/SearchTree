@@ -1,8 +1,12 @@
 #pragma once
 
+#include <functional>
 #include <iostream>
 #include <memory>
-#include <functional>
+#include <string>
+
+#include "graphviz_utils.hpp"
+#include "include/graphviz.hpp"
 
 namespace SearchTree {
 
@@ -104,22 +108,27 @@ class Node final {
 
     void dump(std::ostream& ostr = std::cout) const { ostr << value_ << " "; }
 
-    void dumpgv(std::ostream& ostr = std::cout) const {
-        ostr << "    node" << this << "[shape=Mrecord, label=\"{" << value_
-             << " | desc_num = " << desc_num_ << ", height = " << height_
-             << "}\", style=filled, fillcolor=\"#C5E384\"]\n";
+    std::string getLabel() const {
+        return std::to_string(value_) +
+               " | desc_num = " + std::to_string(desc_num_) +
+               ", height = " + std::to_string(height_);
+    }
+
+    node_proxy dumpgv(graphviz& graph, graphviz_formatting format,
+                      std::ostream& ostr = std::cout) const {
+        auto node = graph.insert_node(format, getLabel());
 
         if (left_.get() != nullptr) {
-            ostr << "    node" << this << "->node" << left_.get()
-                 << " [color = \"#ff0000\"]\n";
-            left_->dumpgv(ostr);
+            node.connect(
+                graphviz_formatter::left_edge,
+                left_->dumpgv(graph, graphviz_formatter::default_node, ostr));
         }
-
         if (right_.get() != nullptr) {
-            ostr << "    node" << this << "->node" << right_.get()
-                 << " [color = \"#40ff00\"]\n";
-            right_->dumpgv(ostr);
+            node.connect(
+                graphviz_formatter::right_edge,
+                right_->dumpgv(graph, graphviz_formatter::default_node, ostr));
         }
+        return node;
     }
 };
 

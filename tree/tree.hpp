@@ -196,7 +196,7 @@ class AVLTree final {
         return elements;
     }
 
-    void dump(std::ostream& ostr) const {
+    void dump(std::ostream& ostr = std::cout) const {
         if (empty()) {
             throw EmptyTreeException();
         }
@@ -206,13 +206,14 @@ class AVLTree final {
         }
     }
 
-    void dumpgv(std::ostream& ostr) const {
+    void dumpgv(std::ostream& ostr = std::cout) const {
         if (empty()) {
             throw EmptyTreeException();
         }
-        ostr << "digraph structs {\n";
-        root->dumpgv(ostr);
-        ostr << "}";
+
+        graphviz graph{};
+        root->dumpgv(graph, graphviz_formatter::root_node);
+        graph.print(ostr);
     }
 
    private:
